@@ -1,23 +1,30 @@
 function [T, Y] = eulerexp(f, end_time, init_cond)
-    % Résout l'équation différentielle sur l'intervalle [0 ; end_time]
-    % à l'aide de la méthode d'Euler explicite.
+    % Resout l'equation diffÃ©rentielle sur l'intervalle [0 ; end_time]
+    % a l'aide de la methode d'Euler explicite.
     %
     % init_cond est un vecteur contenant les conditions initiales.
     % 
-    % f représente les fonctions à résoudre.
+    % f represente les fonctions a resoudre.
     
     n = length(init_cond);
-    h = 0.005;
+    h = 1;
     iterations = (end_time)/h;
     T = zeros(1, iterations + 1);
     Y = zeros(n, iterations + 1);
     
+        fprintf('Iteration #0\n');
+        disp(size(T))
+        disp(size(Y))
+    
     for step = 1:n
-        Y(step, step) = init_cond(step);
+        Y(step, :) = init_cond(step);
     end
         
     for i = 1:iterations
         T(i+1) = i * h;
         Y(:, i+1) = Y(:, i) + h * f(T(i), Y(:, i));
+        fprintf('Iteration #%d\n', i);
+        disp(size(T))
+        disp(size(Y))
     end
 end
