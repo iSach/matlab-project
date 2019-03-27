@@ -1,25 +1,25 @@
-function dvect = oderobotQ2(t, vect)
+function dvect = oderobotQ4(t, vect, psiL_d, psiR_d, k)
 % Renvoie un vecteur contenant les derivees des fonctions donnees :
 % psi_r(t) : Mouvement sur la roue droite.
 % psi_l(t) : Mouvement sur la roue gauche.
-% v(t) : Vitesse linéaire du robot
+% v(t) : Vitesse lineaire du robot
 % w(t) : Vitesse angulaire du robot
 % theta(t) : Angle du robot avec l'horizontale
 % x(t) : Position du robot selon x
 % y(t) : Position du robot selon y
 
-    % Différentes valeurs pré-définies utilisés dans les equ. diff.
-    e=r_consts.wheel_offset;
-    r=r_consts.wheel_radius;
-    m=r_consts.robot_mass;
-    J=r_consts.robot_intertia;
-    c=r_consts.f_friction;
-    d=r_consts.d_friction;
-    eta=r_consts.reg_param;
-    TR=r_consts.right_torque;
-    TL=r_consts.left_torque;
+    % Différentes valeurs pre-definies utilisés dans les equ. diff.
+    e = r_consts.wheel_offset;
+    r = r_consts.wheel_radius;
+    m = r_consts.robot_mass;
+    J = r_consts.robot_intertia;
+    c = r_consts.f_friction;
+    d = r_consts.d_friction;
+    eta = r_consts.reg_param;
     
-    disp(vect(1))
+    TR = - k * (vect(1) - ppval(psiR_d, t));
+    TL = - k * (vect(2) - ppval(psiL_d, t));
+    disp(vect(1));
 
     % dvect contient les differentes derivees des fonctions composant le
     % vecteur vect.
