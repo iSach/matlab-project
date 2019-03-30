@@ -19,7 +19,6 @@ function dvect = oderobotQ4(t, vect, psiL_d, psiR_d, k)
     
     TR = - k * (vect(1) - ppval(psiR_d, t));
     TL = - k * (vect(2) - ppval(psiL_d, t));
-    disp(vect(1));
 
     % dvect contient les differentes derivees des fonctions composant le
     % vecteur vect.

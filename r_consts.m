@@ -5,8 +5,8 @@ classdef r_consts
       
       % Question 2 : Modelisation et simulation
       sys_init_cond = 1 + zeros(7, 1); % C.I. du systeme différentiel
-      sys_final_time = 10;         % Temps final pour le sys. diff.
-      euler_gap = 0.1;            % Ecart entre les itérations d'Euler exp
+      sys_final_time = 20;         % Temps final pour le sys. diff.
+      euler_gap = 0.01;            % Ecart entre les itérations d'Euler exp
       wheel_offset = 0.15;         % dist entre roue et centre du robot
       wheel_radius = 0.1;          % rayon de chaque roue
       robot_mass = 10;             % Masse totale du robot
@@ -29,6 +29,6 @@ classdef r_consts
       % Question 4 : Suivi et optimisation de la trajectoire
       mov_angle_epsilon = 10^-6;
       sys_gain = 100;
-      
+      final_time = 4; % Temps final 
    end
 end

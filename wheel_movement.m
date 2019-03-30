@@ -19,7 +19,7 @@ function [psid_l, psid_r] = wheel_movement(final_time, dxd, dyd)
     
     dxdt = ppval(dxd, lim_epsilon);
     dydt = ppval(dyd, lim_epsilon);
-    prev_angle = atan2(dxdt, dydt);
+    prev_angle = atan2(dydt, dxdt);
     
     for i = 2:r_consts.wheel_mov_grid
         % Calcul de l'intégrale sur t_{i-1} -> t_{i}

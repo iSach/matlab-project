@@ -22,7 +22,7 @@ function root = bisection(f, lower_bound, upper_bound, err)
     end
     
     mid = 0;
-    mid_y = (lower_bound + upper_bound) / 2;
+    mid_y = f((lower_bound + upper_bound) / 2);
     i = 0; % Nombre d'itérations.
 
     % Recherche du zéro

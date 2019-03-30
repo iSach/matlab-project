@@ -18,8 +18,6 @@ function dvect = oderobotQ2(t, vect)
     eta=r_consts.reg_param;
     TR=r_consts.right_torque;
     TL=r_consts.left_torque;
-    
-    disp(vect(1))
 
     % dvect contient les differentes derivees des fonctions composant le
     % vecteur vect.
