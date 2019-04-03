@@ -1,120 +1,107 @@
-% Cherche le zéro d'une fonction donnée dans un intervalle donné à l'aide
-% de la méthode de la sécante.
+function root = secantv2(f, low_x, up_x)
+% Approxime un zéro d'une fonction via la méthode de la sécante.
+% Elle cherche ce zéro à l'aide d'une succession de zéros de droites.
+%
+% Bien que la fonction demande au départ deux approximations initiales, le
+% zéro trouvé peut très bien se trouver hors de ces "bornes". 
 %
 % Paramètres :
-%   f : La fonction dont on cherche un zéro.
-%   low : Abscisse de la borne inférieure
-%   up : Abscisse de la borne supérieure
-function root = secant(f, low, up)
+% f     : La fonction dont on cherche un zéro
+% low_x : Abscisse de l'approximation initiale inférieure.
+% up_x  : Abscisse de l'approximation initiale supérieure.
 
-    % Si x1 est inférieur à x0, on appelle 
-    % la fonction en inversant les bornes pour
-    % que x0 soit bien inférieur à x1.
-    if up < low 
-        root = secant(f, up, low);
+    % On récupère la valeur de la tolérance d'erreur.
+    % C'est à dire l'erreur qu'on accepte sur l'axe des ordonnées,
+    % Car il est très improbable que la sécante trouve la racine exacte.
+    tolerance = r_consts.secant_error_tolerance;
+    
+    % Gardien, c'est-à-dire le nombre le maximum d'itérations, afin
+    % d'éviter que la fonction ne cherche indéfiniment des
+    max_iterations = 100;
+
+    % On s'assure, pour une question de praticité, que low < up. 
+    if low_x > up_x
+        root = secantv2(f, up_x, low_x);
         return;
     end
     
-    % On pré-calcule les ordonnées des bornes pour éviter des appels
-    % inutiles de la fonction.
-    low_y = f(low);
-    up_y = f(up);
+    % On calcule les ordonnées des bornes initiales.
+    low_y = f(low_x);
+    up_y = f(up_x);
     
-    % On définit la tolérance d'erreur.
-    err = 10^(-4);
-    
-    % Si l'ordonnée de la borne inférieure est assez proche de 0, on
-    % renvoie la borne inférieure comme racine.
-    if abs(low_y) <= err
-        root = low;
+    % On vérifie que les deux bornes n'ont pas la même ordonnée.
+    % Si c'est le cas, la droite les joignants n'a pas d'intersection avec
+    % l'axe des abscisses.
+    if low_y == up_y
+        root = NaN;
+        disp('Erreur, les ordonnées des bornes sont égales.')
         return;
     end
     
-    % Si l'ordonnée de la borne supérieure est assez proche de 0, on
-    % renvoie la borne supérieure comme racine.
-    if abs(up_y) <= err
-        root = up;
+    % On vérifie si la borne inférieure 
+    % ne peut pas déjà être considérée comme une racine.
+    % La même vérification pour la borne supérieure est effectuée
+    % a chaque itération de la boucle.
+    if abs(low_y) <= tolerance
+        root = low_x;
         return;
     end
     
-    original_low = low;
-    original_up = up;
+    % Ces 2 vecteurs contiennent les abscisses et ordonnées des 2 points
+    % précédents. Initialement, ce sont respectivement la borne inférieure
+    % et la borne supérieure. A chaque itération, la borne inférieure est
+    % remplacée par la borne supérieure, et la supérieure par la nouvelle
+    % abscisse calculée.
+    prev_x = [low_x up_x];
+    prev_y = [low_y up_y];
     
-    % Calcul de la droite et de son zéro.
-    m = (up_y - low_y) / (up - low);
-    p = low_y - m * low;
-    b = -(p / m);
-    low = b;
-    
-    problem = 0;
-    min_slope = 0.05;
-    
-    % Direction de la recherche via la méthode de la sécante
-    % 1 = Sens classique (en partant du point supérieur)
-    % 0 = Sens inverse (en partant du point inférieur)
-    direction = 1;
-        
-    % La boucle tourne tant que le zéro ne rencontre pas la tolérance
-    % voulue.
-    while abs(f(b)) > err
-    
-        low_y = f(low);
-        up_y = f(up);
-        
-        if(isinf(low_y) || isinf(up_y))
-            error('Pas de convergence de la sécante.')
+    for i = 1:max_iterations
+        % On vérifie ici si notre borne supérieure peut être
+        % considérée comme une raicine, i.e. si son ordonnée ne dépasse
+        % pas la tolérance d'erreur.
+        % La 1re vérification vérifie la borne supérieure initiale, et
+        % les vérifications suivantes le dernier point calculé (qui
+        % remplace la borne supérieure précédente)
+        if abs(prev_y(2)) <= tolerance
+            root = prev_x(2);
+            return;
         end
         
-        % Arrive si le zéro de la sécante se trouve hors du domaine de
-        % définition de la fonction. Dans ce cas, on peut tenter de
-        % corriger en effectutant la recherche dans l'autre sens.
-        if(isnan(low_y) || ~isreal(low_y))
-            disp('Erreur. Tentative de correction. (Changement de sens de la recherche)');
-            low = original_low;
-            up = original_up;
-            low_y = f(low);
-            up_y = f(up);
-            m = (up_y - low_y) / (up - low);
-            p = low_y - m * low;
-            b = -(p / m);
-            up = b;
-            direction = 0;
-            continue;
+        % On calcule la nouvelle abscisse.
+        new_x = prev_x(2) - ...
+            (prev_y(2) * (prev_x(2) - prev_x(1))) ...
+            / (prev_y(2) - prev_y(1));
+        
+        % On vérifie si la nouvelle valeur a bien été calculée.
+        % Le cas échéant, on arrête la boucle.
+        if isnan(new_x)
+           break; 
         end
         
-        m = (up_y - low_y) / (up-low);
-        p = low_y - m * low;
-        b = -(p / m);
+        new_y = f(new_x);
         
-        if(direction)
-            low = b;
-        else
-            up = b;
+        % Si la nouvelle abscisse 
+        if ~isreal(new_y)
+            break;
         end
-  
-        % On vérifie si la convergence de la pente n'est pas trop faible,
-        % si elle l'est, on prévient d'un éventuel ralentissement de la
-        % recherche de zéro. L'utilisateur sera alors libre d'annuler la
-        % recherche ou non.
-        if problem < 150
-            if m < min_slope
-                problem = problem + 1;
-            else
-                problem = 0;
-            end
-            if problem == 10
-                disp('Attention : Faible convergence. La recherche peut etre lente.')
-            elseif problem == 50
-                disp('Attention : Tres faible convergence ! La recherche sera longue.')
-            elseif problem == 150
-                disp('Attention : Extremement faible convergence !! La recherche sera tres longue !')
-            end
-        end
+        
+        % Borne inf := borne sup
+        % Borne sup := new_x
+        % De même pour les ordonnées.
+        prev_x(1) = prev_x(2);
+        prev_x(2) = new_x;
+        prev_y(1) = prev_y(2);
+        prev_y(2) = new_y;
     end
     
-    if abs(f(b)) > err
-        error('Aucune racine n''a ete trouvee dans cet intervalle')
+    % Si, après la boucle, la dernière abscisse calculée ne possède pas
+    % une ordonnée suffisamment petite, on retourne NaN puisqu'on n'a pas
+    % alors trouvé une racine acceptable.
+    if abs(prev_y(2)) > tolerance
+        root = NaN;
+        fprintf('La méthode de la sécante n''a pas pu trouvé de racine avec\n les approximations initiales données.')
+        return;
     end
-    
-    root = b;
+
+    root = prev_x(2); 
 end
