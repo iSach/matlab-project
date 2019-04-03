@@ -1,7 +1,7 @@
 classdef r_consts
    properties (Constant)
-      % Question 1 : Bissection et secante 
-      
+      % Question 1 : Bissection et secante
+      secant_error_tolerance = 10E-6;
       
       % Question 2 : Modelisation et simulation
       sys_init_cond = 1 + zeros(7, 1); % C.I. du systeme différentiel

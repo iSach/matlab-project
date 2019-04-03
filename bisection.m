@@ -24,6 +24,11 @@ function root = bisection(f, lower_bound, upper_bound, err)
     mid = 0;
     mid_y = f((lower_bound + upper_bound) / 2);
     i = 0; % Nombre d'itérations.
+    
+    if mid_y == 0
+       root = mid;
+       return;
+    end
 
     % Recherche du zéro
     while abs(mid_y) > err && i < 100
@@ -68,8 +73,7 @@ function root = bisection(f, lower_bound, upper_bound, err)
         i = i + 1;
     end
     
-    if abs(f(mid)) > err
-        % Aucune racine n'a été trouvée.
-        error('Pas de racine dans cet intervalle.')
-    end
+    root = NaN;
+    % Aucune racine n'a été trouvée.
+    error('Pas de racine dans cet intervalle.')
 end
