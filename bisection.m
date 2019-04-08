@@ -21,53 +21,48 @@ function root = bisection(f, lower_bound, upper_bound, err)
         error('Bornes non correctes, il faut une borne positive, et une negative')
     end
     
+    % On initialise les variables pour la boucle
     mid = 0;
-    mid_y = f((lower_bound + upper_bound) / 2);
-    i = 0; % Nombre d'itérations.
+    % On initialise à une valeur > err pour pouvoir commencer la boucle.
+    % Cette valeur est calculée à chaque itération.
+    mid_y = err + 1; 
+    i = 0;
+    max_iterations = 100; % On définit un nombre maximum d'itérations
     
-    if mid_y == 0
-       root = mid;
-       return;
-    end
-
     % Recherche du zéro
-    while abs(mid_y) > err && i < 100
+    while abs(mid_y) > err && i < max_iterations 
         
         low_y = f(lower_bound);
         up_y = f(upper_bound);
-       
-        % On vérifie si on a atteint la précision voulue en la borne
-        % inférieure.
+        
+        % On vérifie d'abord que les bornes ne peuvent pas être considérés
+        % comme des racines.
         if abs(low_y) <= err
             root = lower_bound;
             return;
         end
-
-        % On vérifie si on a atteint la précision voulue en la borne
-        % supérieure.
-        if abs(up_y) <= err 
+        if abs(up_y) <= err
             root = upper_bound;
             return;
         end
         
-        % On prend le milieu de l'intervalle et le définit comme étant la
-        % nouvelle borne supérieure (ou inférieure) selon le signe de la
-        % fonction en cette abscisse.
+        % On prend ensuite le milieu de l'intervalle et le définit comme
+        % étant la nouvelle borne supérieure (ou inférieure) selon le signe
+        % de la fonction en cette abscisse.
         mid = (upper_bound + lower_bound) / 2;
-        
         mid_y = f(mid);
        
-        if mid_y * up_y > 0
-            upper_bound = mid;
-        else
-            lower_bound = mid;
-        end
-            
         % On vérifie si l'ordonnée en b répond à la précision voulue, si
         % oui on retourne b comme étant la racine approximative.
         if abs(mid_y) <= err
             root = mid;
             return;
+        end
+        
+        if mid_y * up_y > 0
+            upper_bound = mid;
+        else
+            lower_bound = mid;
         end
         
         i = i + 1;

@@ -28,7 +28,7 @@ classdef r_consts
       
       % Question 4 : Suivi et optimisation de la trajectoire
       mov_angle_epsilon = 10^-6;
-      sys_gain = 100;
+      sys_gain = 50;
       final_time = 4; % Temps final 
    end
 end

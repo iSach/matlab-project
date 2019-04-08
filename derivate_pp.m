@@ -5,7 +5,7 @@ function d_poly = derivate_pp(pp)
     A = diag(pp.order - 1:-1:0);
     dcoefs = pp.coefs * A;
    
-    % On tronque a (n-1)eme colonne afin de réduire l'ordre des polynômes.
+    % On tronque la (n)eme colonne afin de réduire l'ordre des polynômes.
     [m, n] = size(dcoefs);
     dcoefs = dcoefs(1:m, 1:(n - 1));
     

@@ -1,4 +1,4 @@
-function root = secantv2(f, low_x, up_x)
+function root = secant(f, low_x, up_x)
 % Approxime un zéro d'une fonction via la méthode de la sécante.
 % Elle cherche ce zéro à l'aide d'une succession de zéros de droites.
 %
@@ -17,11 +17,11 @@ function root = secantv2(f, low_x, up_x)
     
     % Gardien, c'est-à-dire le nombre le maximum d'itérations, afin
     % d'éviter que la fonction ne cherche indéfiniment des
-    max_iterations = 100;
+    max_iterations = 75;
 
     % On s'assure, pour une question de praticité, que low < up. 
     if low_x > up_x
-        root = secantv2(f, up_x, low_x);
+        root = secant(f, up_x, low_x);
         return;
     end
     

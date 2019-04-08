@@ -1,4 +1,9 @@
-function error = get_error(x, y, psil, psir, a, time)
+function error = get_error(a, time)
+    [x, y] = gen_traj(a);
+    dxd = derivate_pp(x);
+    dyd = derivate_pp(y);
+    [psil, psir] = mov_interpolation(a * 4, dxd, dyd);
+     
     [T, Y] = solve_diff2(x, y, psil, psir, a);
 
     % calcul de l'erreur finale
